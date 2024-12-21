@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" type="image" href="https://images.playground.com/3c68ea8e824343bd8adc96c570790199.jpeg">
+
+<style>
+        .body{
+        display: inline-block;
+        background: hsl(224, 32%, 12%);
+        background-image:conic-gradient(from 0deg at 50% 50% ,blue,purple,purple,blue);
+        background-blend-mode: multiply;
+        color:white;
+        overflow-x: hidden;
+        background-repeat: no-repeat;
+        align-items : center;
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+        overflow-y:hidden;
+        margin-bottom:4rem;
+    }
+    .box1{
+        margin-top:1rem;
+        margin-right:1rem;
+        margin-left:3rem;
+        width:30rem;
+        height:25rem;
+        border-radius: 50px;
+        padding-left:10.5rem;
+        padding-top:1rem;
+        box-sizing: border-box;
+        box-shadow: blueviolet 0px 20px 40px, blueviolet 0px -20px 40px, blueviolet 0px 4px 6px, blueviolet 0px 12px 13px, blueviolet 0px -3px 5px;
+        background-image: linear-gradient(to top right,purple,black,navy,black);
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+        align-self: center;
+        position: relative;
+        border:2px solid white;
+    }
+    .box2{
+        margin-top:1rem;
+        margin-left:7rem;
+        width:30rem;
+        height:25rem;
+        border-radius: 50px;
+        padding-left:10.5rem;
+        padding-top:1rem;
+        box-sizing: border-box;
+        box-shadow: blueviolet 0px 20px 40px, blueviolet 0px -20px 40px, blueviolet 0px 4px 6px, blueviolet 0px 12px 13px, blueviolet 0px -3px 5px;
+        background-image: linear-gradient(to top right,purple,black,navy,black);
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+        align-self: center;
+        position: relative;
+        border:2px solid white;
+    }
+    #l_username,#l_password,#l_email,#s_username,#s_email,#s_password,#l_age,#l_team,#s_age{
+        background-image: linear-gradient(to top left,purple,lightblue,gray);
+        border:2px solid white;
+    }
+    ::placeholder{
+        color:black;
+    }
+    .look{
+        margin-bottom:40rem;
+    }
+    .submit{
+        background: hsl(224, 32%, 12%);
+        background-image:conic-gradient(from 0deg at 50% 50% ,blue,purple,purple,blue);
+        background-blend-mode: multiply;
+        color:white;
+        align-items : center;
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+        border-radius:40px;
+        transition:all 2s;
+        transition-timing-function:ease-in-out;
+        border:2px solid white;
+      }
+      .submit:hover{
+        align-items:center;
+        border-radius:20px;
+        height:2rem;
+        width:5rem;
+        border:2px solid white;
+
+    }
+    a{
+        color:white;
+        text-decoration: none;
+    }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTER</title>
+</head>
+<body class="body">
+<div style="margin-left:30rem;"><h1>GET STARTED</h1></div>
+
+<div class="look">
+    <div class="box1" style="float:left;">
+        <h1>&nbsp;&nbsp;PLAYER</h1>
+        <form class="sign-in-form" method="post" action="index.jsp">
+        <input type="email" name="l_email" id="l_email" placeholder="EMAIL" required>
+        <br>
+        <br>
+        <input type="text" name="l_username" id="l_username" placeholder="USERNAME" required>
+        <br><br>
+        <input type="password" name="l_password" id="l_password" placeholder="PASSWORD" required>
+            <br><br>
+            <input type="number" name="l_age" id="l_age" placeholder="AGE" required>
+            <br><br>
+            <input type="text" name="l_team" id="l_team" placeholder="TEAM" required>
+        <br><br>
+            <input type="submit" class="submit" value="REGISTER"></form>
+        <br>
+        <a href="login_page2.html">IF ALREADY AN ACCOUNT EXISTS</a>
+    </div>
+    <div class="box2" style="float:right;">
+        <h1>&nbsp;&nbsp;COACH</h1>
+        <form class="sign-in-form2" method="post" action="index2.jsp">
+        <input type="email" name="s_email" id="s_email" placeholder="EMAIL">
+        <br>
+        <br>
+        <input type="text" name="s_username" id="s_username" placeholder="USERNAME">
+        <br><br>
+        <input type="password" name="s_password" id="s_password" placeholder="PASSWORD">
+        <br><br>
+            <input type="number" name="s_age" id="s_age" placeholder="AGE" required>
+            <br><br>
+            <input type="submit" class="submit" value="REGISTER">
+            <br><br>
+            <a href="login_page2.html">IF ALREADY AN ACCOUNT EXISTS</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

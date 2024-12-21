@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" type="image" href="https://images.playground.com/3c68ea8e824343bd8adc96c570790199.jpeg">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .searchbox{
+        padding:0px 10rem 0px 17rem;
+        margin:0px 0px 0px 23rem;
+        border-radius: 20px;
+        border-width: 3px;
+        transition-property: padding,background-image,border;
+        transition-duration:1s;
+        background-image: linear-gradient(to right, purple,blue,black);
+        transition-timing-function:ease-in-out;position: fixed;
+        border:2px solid white;
+    }
+    .searchbox:focus{
+        width:35rem;
+        padding:0px 1rem 0px 1rem;
+        background-image: linear-gradient(to right, purple,blue,black);
+        border-width:1px;
+        border-style:ridge;
+        color:white;
+        border:2px solid white;
+    }
+    .body{
+        display: inline-block;
+        background: hsl(224, 32%, 12%);
+        background-image:conic-gradient(from 0deg at 50% 50% ,blue,purple,purple,blue);
+        background-blend-mode: multiply;
+        color:white;
+        overflow-x: hidden;
+        background-repeat:no-repeat;
+        margin-bottom:40rem;
+        text-shadow:0.1em 0.1em 0.3em whitesmoke ;
+    }
+    .port{
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+    }
+    a{
+        color:white;
+        text-decoration: none;
+    }
+    ::placeholder{
+        color:white;
+    }
+    .footer{
+    height:9rem;
+    width:100%;
+    box-sizing: border-box;
+    margin-top:24.5rem;
+    margin-left:-0.5rem;
+    background:linear-gradient(to top right,black,navy,black,purple);
+    position:fixed;
+    border-radius:4rem;
+    z-index:4;
+    border:2px solid white;
+
+    }
+    .TACTIC-HUB{
+    border-radius:50%;
+    width:15rem;
+    height:15rem;
+    margin-left:32rem;
+    margin-bottom:-17rem;
+    border:2px solid white;
+    box-shadow: white 0px 20px 40px, white 0px -20px 40px, white 0px 4px 6px, white 0px 12px 13px, white 0px -3px 5px;
+    }
+    #submit{
+        z-index:0;
+        margin-left:61rem;
+        position:fixed;
+        background-color:linear-gradient(to top right,purple,black,navy);
+        border:2px solid white;
+    }
+    .abouthead{
+        margin-left:7rem;
+    }
+    .about{
+        margin-left:3rem;
+        margin-right:60rem;
+        font-size:small;
+
+    }
+    .aboutbody{
+        padding-bottom:-20rem;
+        margin-top:-1rem;
+        border-radius:20px;
+
+
+    }
+    .settingsBtn {
+        margin-right: 36rem;
+        margin-top: 0.5rem;
+        margin-left: 70rem;
+        width: 5rem;
+        height: 3rem;
+        border-radius: 50px;
+        padding-left: 0.5rem;
+        padding-top: 0.1rem;
+        box-sizing: border-box;
+        box-shadow: blueviolet 0px 20px 40px, blueviolet 0px -20px 40px, blueviolet 0px 4px 6px, blueviolet 0px 12px 13px, blueviolet 0px -3px 5px;
+        background-image: linear-gradient(to top right, purple, black, navy, black);
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+        z-index: 4;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        animation: blink 1s infinite alternate;border:2px solid white;
+
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACTIC-HUB</title>
+</head>
+
+<body class="body">
+
+<form action="search.jsp" method="post">
+<input type="text" placeholder="search" class="searchbox" name="searchbox" id="searchbox">
+    <button input type="submit" id="submit"><i class="fa fa-search"></i></button>
+</form>
+    <a href="settings.html" class = "settingBtn"><button class="settingsBtn">Settings</button></a>
+<br>
+    <img src="https://images.playground.com/3c68ea8e824343bd8adc96c570790199.jpeg" class="TACTIC-HUB">
+<div class="footer">
+    <div class="aboutbody"></div>
+    <div class="abouthead">
+        <h3>TACTIC-HUB</h3>
+    </div>
+
+    <div class="about">
+        <p>THE PLACE WHERE A PERSON MAKES THE GAME AS AN EXPERIENCE TO DEVELOP HIS/HER OBSTACLE OVERCOMING SKILLS,DECISION MAKING SKILLS, AND CREATIVITY</p>
+    </div>
+    </div>
+</div>
+
+</body>
+</html>

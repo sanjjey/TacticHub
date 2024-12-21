@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<style>
+    *{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+  color:white;
+
+}
+.button{
+        margin-top:-23rem;
+        width:15rem;
+        height:7rem;
+        border-radius: 50px;
+        justify-content:center;
+        align-items:center;
+        padding-top:2rem;
+        padding-left:1.5rem;
+        box-sizing: border-box;
+        box-shadow: blueviolet 0px 20px 40px, blueviolet 0px -20px 40px, blueviolet 0px 4px 6px, blueviolet 0px 12px 13px, blueviolet 0px -3px 5px;
+        background-image: linear-gradient(to top right,purple,black,navy,black);
+        text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+        align-self: center;
+        position: absolute;
+        z-index:3;
+        border:2px solid white;
+
+    }
+.login{
+  width: 100%;
+  height: 100%;
+  display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: hsl(224, 32%, 12%);
+            background-image: conic-gradient(from 0deg at 50% 50%, blue, purple, purple, blue);
+            background-blend-mode: multiply;
+            color: white;
+            overflow-x: hidden;
+            background-repeat: no-repeat;
+            text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+  background-size: cover;
+  position: absolute;
+
+
+
+}
+.login_body{
+  display:flex;
+  width:17rem;
+  height: 10rem;
+  margin-left:29rem;
+  position: relative;
+  margin: 6% auto;
+box-shadow: blueviolet 0px 20px 40px, blueviolet 0px -20px 40px, blueviolet 0px 4px 6px, blueviolet 0px 12px 13px, blueviolet 0px -3px 5px;
+        background-image: linear-gradient(to top right,purple,black,navy,black);
+  padding: 5px;
+  overflow: hidden;
+  border-radius:20%;
+  margin-top:10rem;
+  border:2px solid white;
+}
+.button_cl{
+  width: 220px;
+  margin: 35px auto;
+  position: relative;
+  box-shadow: 0px 0px 20px 9px #ff61241f;
+  border-radius: 30px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, purple,navy);
+  border:2px solid white;
+
+}
+.lobut
+{
+margin-top:1rem;
+padding: 10px 30px;
+cursor: pointer;
+background: transparent;
+border: 0;
+outline: none;
+position: relative;
+
+}
+#btn
+{
+display:inline-flex;
+top: 0;
+left: 0;
+position: absolute;
+width: 7rem;
+height: 100%;
+background: linear-gradient(to right,purple, navy);
+border-radius: 30px;
+transition: 0.5s;
+border:1px solid white;
+
+}
+.information
+{
+  top: 180px;
+  position: absolute;
+  width: 280px;
+  transition: 0.5s;
+}
+span
+{
+  color: #777;
+  font-size: 12px;
+  bottom: 68px;
+  position: absolute;
+}
+h3{
+  text-align: center;
+font-family:Algerian;
+padding-top: 20px;
+}
+</style>
+<head>
+    <title>
+       TACTIC-HUB
+    </title>
+
+    <link rel="icon" type="image" href="https://images.playground.com/3c68ea8e824343bd8adc96c570790199.jpeg">
+</head>
+<body>
+<div class="login">
+    <h1 class="button">TACTIC-HUB</h1>
+    <div class="login_body">
+
+        <div class="button_cl">
+            <div id="btn">
+            <a href="login_page2.html"><button type="button" class="lobut" onclick="login()">LOG IN </button></a>
+            <a href ="register.html"><button type="button" class="lobut" onclick="register()">REGISTER </button></a>
+        </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+            var x=document.getElementById("login");
+            var y=document.getElementById("register");
+            var z=document.getElementById("btn");
+            function register()
+            {
+                x.style.left="400px";
+                y.style.left="50px";
+                z.style.left="110px";
+            }
+            function login()
+            {
+                x.style.left="50px";
+                y.style.left="450px";
+                z.style.left="0";
+            }
+            function validateSpanElements() {
+            var spanElements = document.querySelectorAll('form span');
+            for (var i = 0; i < spanElements.length; i++) {
+                if (spanElements[i].innerText.trim() === '') {
+                    alert('Please fill in all required fields.');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        document.querySelectorAll('form').forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!validateSpanElements()) {
+                    event.preventDefault();
+                }
+            });
+        });
+        </script>
+</body>
+</html>

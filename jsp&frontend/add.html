@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADD STRATEGY</title>
+<link rel="icon" type="image" href="https://images.playground.com/3c68ea8e824343bd8adc96c570790199.jpeg">
+
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+header {
+background-color: #7d1ae7;
+color: #fff;
+padding: 1rem;
+}
+header h1 {
+margin: 0;
+font-size: 2rem;
+}
+nav ul {
+list-style: none;
+padding: 0;
+}
+nav ul li {
+display: inline;
+margin-right: 1rem;
+}
+nav ul li a {
+color: #fff;
+text-decoration: none;
+}
+.content {
+max-width: 800px;
+margin: 2rem auto;
+padding: 0 1rem;
+}
+.form-group {
+margin-bottom: 1rem;
+}
+label {
+display: block;
+font-weight: bold;
+}
+input[type="text"],
+textarea {
+width: 100%;
+padding: 0.5rem;
+margin-top: 0.5rem;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+button[type="submit"] {
+background-color: #7d1ae7;
+color: #fff;
+border: none;
+padding: 0.5rem 1rem;
+cursor: pointer;
+border-radius: 4px;
+}
+button[type="submit"]:hover {
+background-color: #555;
+}
+hr {
+margin: 2rem 0;
+border: none;
+border-top: 1px solid #ccc;
+}
+        body{
+            background: hsl(224, 32%, 12%);
+            background-image:conic-gradient(from 0deg at 50% 50% ,blue,purple,purple,blue);
+            text-shadow: 0.1em 0.1em 0.3em whitesmoke;
+            background-blend-mode: multiply;
+            color:white;
+            overflow-x: hidden;
+            margin-bottom: 40rem;
+            position:relative;}
+    </style>
+<body>
+<header><h1>Welcome to our Tactic-Hub!!!.....    Here you can add Strategies </h1>
+    <nav>
+      <ul>
+        <li><a href="coach.html">Profile</a></li>
+      </ul>
+    </nav>
+</header>
+<div class="content">
+  <h2>Add New Strategy</h2>
+  <form id="strategyForm" method="post" action="posting.jsp">
+    <div class="form-group">
+      <label for="title">Name of the game:</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Strategies of the above game are:</label>
+      <input type="text" id="description" name="description" rows="4" required>
+    </div>
+    <input type="submit" value="Submit Strategy">
+  </form>
+  <hr>
+</div>
+</body>
+</html>
