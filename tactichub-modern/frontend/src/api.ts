@@ -269,7 +269,20 @@ export const api = {
     return res.json();
   },
 
-  // AI Text Analyzer: Improvisation & Translation
+  // AI Text Analyzer: Improvisation, Translation & Moderation
+  async moderateContent(title: string, description: string, game = "Sports"): Promise<{ allowed: boolean; status: string; message: string; relevance_score?: number }> {
+    const res = await fetch(`${API_BASE}/ai/moderate`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ title, description, game }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: "Moderation check failed" }));
+      throw new Error(err.detail || "Moderation check failed");
+    }
+    return res.json();
+  },
+
   async improviseText(text: string, context = "tactics"): Promise<{ original: string; improvised: string; method: string; improvements: string[] }> {
     const res = await fetch(`${API_BASE}/ai/improvise`, {
       method: "POST",

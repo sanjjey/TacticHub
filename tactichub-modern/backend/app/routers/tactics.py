@@ -5,6 +5,7 @@ from ..database import get_db
 from ..models import Tactic, CoachProfile, User
 from ..schemas import TacticCreate, TacticResponse
 from ..auth import get_current_user, get_current_coach
+from ..moderator import content_moderator
 
 router = APIRouter(prefix="/api/tactics", tags=["Tactics"])
 
@@ -14,6 +15,18 @@ def create_tactic(
     coach: CoachProfile = Depends(get_current_coach),
     db: Session = Depends(get_db)
 ):
+    # AI Content Moderation: Reject NSFW words, toxicity, and nonsense/irrelevant content
+    mod_result = content_moderator.moderate_tactic(
+        title=req.title,
+        description=req.description,
+        game=req.game
+    )
+    if not mod_result["allowed"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"AI Moderation Rejection: {mod_result['message']}"
+        )
+
     new_tactic = Tactic(
         coach_id=coach.id,
         game=req.game.strip(),

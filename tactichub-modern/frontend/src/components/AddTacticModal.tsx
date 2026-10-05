@@ -89,6 +89,14 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
     setError(null);
 
     try {
+      // Pre-flight AI content moderation
+      const mod = await api.moderateContent(title, description, game);
+      if (!mod.allowed) {
+        setError(`🛡️ AI Content Moderation Block: ${mod.message}`);
+        setLoading(false);
+        return;
+      }
+
       await api.createTactic({ game, title, description });
       onSuccess();
       onClose();
@@ -274,8 +282,12 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
             style={{ width: "100%", padding: "12px", marginTop: "6px" }}
             disabled={loading}
           >
-            {loading ? "Publishing..." : "Publish Strategy to Hub"}
+            {loading ? "Verifying with AI & Publishing..." : "Publish Strategy to Hub"}
           </button>
+
+          <div style={{ fontSize: "0.75rem", color: "#64748b", textAlign: "center", marginTop: "4px" }}>
+            🛡️ Protected by AI Content Moderation: NSFW, abusive language, and non-tactical nonsense are automatically blocked.
+          </div>
         </form>
       </div>
     </div>

@@ -27,6 +27,27 @@ class TranslateResponse(BaseModel):
     provider: str
     note: Optional[str] = None
 
+class ModerateRequest(BaseModel):
+    title: str
+    description: str
+    game: Optional[str] = "Sports"
+
+class ModerateResponse(BaseModel):
+    allowed: bool
+    status: str
+    message: str
+    relevance_score: Optional[float] = None
+
+@router.post("/moderate", response_model=ModerateResponse)
+def moderate_content(req: ModerateRequest):
+    from ..moderator import content_moderator
+    result = content_moderator.moderate_tactic(
+        title=req.title,
+        description=req.description,
+        game=req.game or "Sports"
+    )
+    return result
+
 @router.post("/improvise", response_model=ImproviseResponse)
 def improvise_english(req: ImproviseRequest):
     if not req.text.strip():

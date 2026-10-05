@@ -18,6 +18,35 @@ SUPPORTED_LANGUAGES = [
     {"code": "arabic", "name": "Arabic", "flag": "🇸🇦"},
 ]
 
+# Language normalization mapping from ISO 639 codes to deep_translator language names
+LANGUAGE_CODE_MAP = {
+    "auto": "auto",
+    "en": "english",
+    "english": "english",
+    "es": "spanish",
+    "spanish": "spanish",
+    "fr": "french",
+    "french": "french",
+    "de": "german",
+    "german": "german",
+    "it": "italian",
+    "italian": "italian",
+    "pt": "portuguese",
+    "portuguese": "portuguese",
+    "hi": "hindi",
+    "hindi": "hindi",
+    "ta": "tamil",
+    "tamil": "tamil",
+    "ja": "japanese",
+    "japanese": "japanese",
+    "zh": "chinese simplified",
+    "zh-cn": "chinese simplified",
+    "chinese": "chinese simplified",
+    "chinese simplified": "chinese simplified",
+    "ar": "arabic",
+    "arabic": "arabic",
+}
+
 # Tactical sports enhancement glossary for offline heuristic improver
 TACTICAL_VOCABULARY = [
     (r"\brun fast to get ball\b", "rapid counter-press to recover possession immediately"),
@@ -128,20 +157,43 @@ class SportsTextAnalyzer:
             "improvements": applied_improvements
         }
 
-    def translate(self, text: str, target_lang: str, source_lang: str = "english") -> Dict[str, Any]:
+    def translate(self, text: str, target_lang: str, source_lang: str = "auto") -> Dict[str, Any]:
         """
-        Translates content between supported languages.
+        Translates content between supported languages with automatic source language detection.
+        Never passes raw 'auto' to MyMemoryTranslator to prevent API rejection.
         """
         text = text.strip()
         if not text:
             return {"original": text, "translated": text, "target_lang": target_lang}
 
-        target_normalized = target_lang.lower().strip()
-        source_normalized = source_lang.lower().strip() if source_lang else "english"
+        # Normalize target language
+        target_clean = target_lang.lower().strip()
+        target_normalized = LANGUAGE_CODE_MAP.get(target_clean, target_clean)
 
-        # If already matching
-        if target_normalized == source_normalized:
-            return {"original": text, "translated": text, "target_lang": target_lang}
+        # Resolve source language if 'auto' or missing
+        source_clean = (source_lang or "auto").lower().strip()
+        source_normalized = None
+
+        if source_clean in ["auto", "", "detect"]:
+            try:
+                import langdetect
+                detected_code = langdetect.detect(text).lower()
+                source_normalized = LANGUAGE_CODE_MAP.get(detected_code, "english")
+            except Exception as e:
+                print(f"[TextAnalyzer] Language detection error, defaulting to english: {e}")
+                source_normalized = "english"
+        else:
+            source_normalized = LANGUAGE_CODE_MAP.get(source_clean, source_clean)
+
+        # If source and target are identical, return text directly
+        if source_normalized == target_normalized:
+            return {
+                "original": text,
+                "translated": text,
+                "source_lang": source_normalized,
+                "target_lang": target_normalized,
+                "provider": "NO_OP_SAME_LANGUAGE"
+            }
 
         # 1. Try LLM translation if key exists
         if self.openai_key or self.gemini_key:
@@ -164,31 +216,35 @@ class SportsTextAnalyzer:
                 return {
                     "original": text,
                     "translated": translated,
+                    "source_lang": source_normalized,
                     "target_lang": target_normalized,
                     "provider": "LLM_NEURAL"
                 }
             except Exception as e:
                 print(f"[TextAnalyzer] LLM translate failed, fallback to DeepTranslator: {e}")
 
-        # 2. Try MyMemoryTranslator
+        # 2. Try MyMemoryTranslator with valid normalized language names
         try:
             translator = MyMemoryTranslator(source=source_normalized, target=target_normalized)
             translated = translator.translate(text)
+            if not translated:
+                translated = text
             return {
                 "original": text,
                 "translated": translated,
+                "source_lang": source_normalized,
                 "target_lang": target_normalized,
                 "provider": "MYMEMORY_TRANSLATOR"
             }
         except Exception as e:
             print(f"[TextAnalyzer] MyMemory translation error: {e}")
-            # Graceful fallback: return original text with notification
             return {
                 "original": text,
                 "translated": text,
+                "source_lang": source_normalized,
                 "target_lang": target_normalized,
                 "provider": "FALLBACK",
-                "note": "Translation service temporarily unreachable."
+                "note": f"Translation temporarily unavailable ({type(e).__name__})."
             }
 
 text_analyzer = SportsTextAnalyzer()
