@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../api";
 import { Tactic, User } from "../types";
-import { Search, Plus, Trash2, ShieldCheck, Gamepad2, Calendar, Languages, RotateCcw } from "lucide-react";
+import { Search, Plus, Trash2, ShieldCheck, Gamepad2, Calendar, Languages, RotateCcw, Video, Image as ImageIcon } from "lucide-react";
 
 interface TacticsFeedProps {
   user: User | null;
@@ -60,7 +60,7 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
   }, [search, selectedSport, myPostsOnly]);
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this tactic?")) return;
+    if (!window.confirm("Are you sure you want to delete this strategy?")) return;
     try {
       await api.deleteTactic(id);
       loadTactics();
@@ -123,19 +123,19 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
             Sports Strategy & Tactics Hub
           </h1>
           <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
-            Tactical playbooks with AI English improvisation and multi-language translation for global teams.
+            Tactical playbooks from coaches & players with formation diagrams, video clips, and AI translation.
           </p>
         </div>
 
-        {user?.role === "COACH" ? (
+        {user ? (
           <button onClick={onOpenAddModal} className="btn-primary">
             <Plus size={18} /> Post Strategy
           </button>
-        ) : !user ? (
+        ) : (
           <button onClick={onOpenAuth} className="btn-primary">
             Sign In to Contribute
           </button>
-        ) : null}
+        )}
       </div>
 
       {/* Search & Filters */}
@@ -146,13 +146,13 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
             type="text"
             className="glass-input"
             style={{ paddingLeft: "42px" }}
-            placeholder="Search by game, keyword, or coach name..."
+            placeholder="Search by game, keyword, or author..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        {user?.role === "COACH" && (
+        {user && (
           <label style={{ display: "flex", alignItems: "center", gap: "8px", color: "#e2e8f0", fontSize: "0.88rem", cursor: "pointer", userSelect: "none" }}>
             <input
               type="checkbox"
@@ -199,12 +199,17 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
           <Gamepad2 size={40} color="#94a3b8" style={{ marginBottom: "12px" }} />
           <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "8px" }}>No strategies found</h3>
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
-            Try adjusting your search terms or filter by another sport.
+            Be the first athlete or coach to post a strategy with photos or video drills!
           </p>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: "20px" }}>
           {tactics.map((t) => {
+            const author = t.author_name || t.coach_name || "Athlete";
+            const role = t.author_role || (t.coach_name ? "COACH" : "PLAYER");
+            const isVerified = t.is_author_verified || t.is_coach_verified || false;
+            const orgOrTeam = t.author_organization || t.coach_organization;
+
             const translation = cardTranslations[t.id];
             const isTranslated = !!translation && !translation.loading;
             const displayTitle = isTranslated ? translation.title : t.title;
@@ -224,10 +229,19 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
               >
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <span className="badge badge-player" style={{ fontSize: "0.75rem" }}>
-                      {t.game}
-                    </span>
-                    {user?.role === "COACH" && user.username === t.coach_name && (
+                    <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                      <span className="badge badge-player" style={{ fontSize: "0.75rem" }}>
+                        {t.game}
+                      </span>
+                      <span
+                        className={`badge ${role === "COACH" ? "badge-coach" : "badge-player"}`}
+                        style={{ fontSize: "0.68rem" }}
+                      >
+                        {role}
+                      </span>
+                    </div>
+
+                    {user && user.username === author && (
                       <button
                         onClick={() => handleDelete(t.id)}
                         style={{
@@ -249,9 +263,38 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
                     {displayTitle}
                   </h3>
 
-                  <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: "1.6", whiteSpace: "pre-line", marginBottom: "16px" }}>
+                  <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: "1.6", whiteSpace: "pre-line", marginBottom: "14px" }}>
                     {displayDesc}
                   </p>
+
+                  {/* Attached Media Photo or Video */}
+                  {t.media_url && (
+                    <div style={{ marginBottom: "16px", borderRadius: "10px", overflow: "hidden", background: "rgba(0,0,0,0.4)", border: "1px solid var(--border-subtle)" }}>
+                      {t.media_type === "VIDEO" ? (
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px", fontSize: "0.75rem", color: "#60a5fa", background: "rgba(0,0,0,0.6)" }}>
+                            <Video size={14} /> Video Demonstration Clip
+                          </div>
+                          <video
+                            controls
+                            src={`http://localhost:8000${t.media_url}`}
+                            style={{ width: "100%", maxHeight: "240px", display: "block" }}
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px", fontSize: "0.75rem", color: "#c084fc", background: "rgba(0,0,0,0.6)" }}>
+                            <ImageIcon size={14} /> Tactical Formation Diagram
+                          </div>
+                          <img
+                            src={`http://localhost:8000${t.media_url}`}
+                            alt={t.title}
+                            style={{ width: "100%", maxHeight: "240px", objectFit: "contain", display: "block" }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* AI Translation Bar */}
                   <div style={{ padding: "8px 12px", background: "rgba(0,0,0,0.25)", borderRadius: "8px", border: "1px solid var(--border-subtle)", marginBottom: "16px" }}>
@@ -312,22 +355,22 @@ export const TacticsFeed: React.FC<TacticsFeedProps> = ({ user, onOpenAddModal, 
                   </div>
                 </div>
 
-                {/* Coach Footer */}
+                {/* Author Footer */}
                 <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#e2e8f0" }}>
-                        Coach {t.coach_name}
+                        {role === "COACH" ? "Coach" : "Player"} @{author}
                       </span>
-                      {t.is_coach_verified && (
+                      {isVerified && (
                         <span title="AI Verified Coach">
                           <ShieldCheck size={16} color="#34d399" />
                         </span>
                       )}
                     </div>
-                    {t.coach_organization && (
+                    {orgOrTeam && (
                       <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                        {t.coach_organization}
+                        {orgOrTeam}
                       </div>
                     )}
                   </div>

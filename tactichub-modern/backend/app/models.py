@@ -19,6 +19,7 @@ class User(Base):
     player_profile = relationship("PlayerProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     coach_profile = relationship("CoachProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     certificates = relationship("Certificate", back_populates="user", cascade="all, delete-orphan")
+    tactics = relationship("Tactic", back_populates="author", cascade="all, delete-orphan")
 
 
 class PlayerProfile(Base):
@@ -49,7 +50,6 @@ class CoachProfile(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="coach_profile")
-    tactics = relationship("Tactic", back_populates="coach", cascade="all, delete-orphan")
     sent_invites = relationship("RecruitmentInvite", back_populates="coach", cascade="all, delete-orphan")
     audits = relationship("VerificationAudit", back_populates="coach", cascade="all, delete-orphan")
 
@@ -58,13 +58,15 @@ class Tactic(Base):
     __tablename__ = "tactics"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    coach_id = Column(String(36), ForeignKey("coach_profiles.id"), nullable=False)
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=False)
     game = Column(String(100), index=True, nullable=False)  # Sport/Game title
     title = Column(String(200), nullable=False)
     description = Column(Text, nullable=False)
+    media_url = Column(String(255), nullable=True)
+    media_type = Column(String(20), nullable=True)  # 'IMAGE' or 'VIDEO'
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    coach = relationship("CoachProfile", back_populates="tactics")
+    author = relationship("User", back_populates="tactics")
 
 
 class Certificate(Base):

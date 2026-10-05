@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { api } from "../api";
-import { X, PlusCircle, Sparkles, Languages, Check, ArrowRight } from "lucide-react";
+import { X, PlusCircle, Sparkles, Languages, Image, Video, UploadCloud, Trash2, ArrowRight } from "lucide-react";
 
 interface AddTacticModalProps {
   isOpen: boolean;
@@ -12,6 +12,10 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
   const [game, setGame] = useState("Football");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<"IMAGE" | "VIDEO" | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [improvising, setImprovising] = useState(false);
   const [improvisingTitle, setImprovisingTitle] = useState(false);
@@ -22,6 +26,25 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
+
+  const handleMediaSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setMediaFile(file);
+      const isVid = file.type.startsWith("video/") || file.name.match(/\.(mp4|webm|mov|mkv)$/i);
+      setMediaType(isVid ? "VIDEO" : "IMAGE");
+      setMediaPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleClearMedia = () => {
+    setMediaFile(null);
+    if (mediaPreview) {
+      URL.revokeObjectURL(mediaPreview);
+    }
+    setMediaPreview(null);
+    setMediaType(null);
+  };
 
   const handleImproviseDesc = async () => {
     if (!description.trim()) {
@@ -97,7 +120,15 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
         return;
       }
 
-      await api.createTactic({ game, title, description });
+      const formData = new FormData();
+      formData.append("game", game);
+      formData.append("title", title);
+      formData.append("description", description);
+      if (mediaFile) {
+        formData.append("media", mediaFile);
+      }
+
+      await api.createTactic(formData);
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -109,10 +140,10 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" style={{ maxWidth: "600px" }} onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" style={{ maxWidth: "620px" }} onClick={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
           <h2 style={{ fontSize: "1.3rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "8px" }}>
-            <PlusCircle size={20} color="#a855f7" /> Publish Tactical Strategy
+            <PlusCircle size={20} color="#a855f7" /> Post Sports Strategy / Playbook
           </h2>
           <button onClick={onClose} style={{ background: "transparent", border: "none", color: "#94a3b8", cursor: "pointer" }}>
             <X size={20} />
@@ -187,7 +218,6 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
               <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#94a3b8" }}>
                 Tactical Description & Instructions
               </label>
-              {/* ✨ Improvise English with AI Button */}
               <button
                 type="button"
                 onClick={handleImproviseDesc}
@@ -208,13 +238,98 @@ export const AddTacticModal: React.FC<AddTacticModalProps> = ({ isOpen, onClose,
 
             <textarea
               required
-              rows={5}
+              rows={4}
               className="glass-input"
-              placeholder="Type your tactical setup (you can type informally or in simple English, then click 'Improvise' to refine vocabulary and tactical flow)..."
+              placeholder="Describe player positioning, ball movement, drills, or triggers..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               style={{ resize: "vertical" }}
             />
+          </div>
+
+          {/* Photo & Video Attachment Section */}
+          <div>
+            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#94a3b8", display: "block", marginBottom: "6px" }}>
+              Attach Tactic Diagram (Photo) or Drill Clip (Video) — Optional
+            </label>
+
+            {!mediaFile ? (
+              <div
+                style={{
+                  border: "2px dashed var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "16px",
+                  textAlign: "center",
+                  background: "rgba(0,0,0,0.2)",
+                  cursor: "pointer",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+                onClick={() => document.getElementById("tactic-media-input")?.click()}
+              >
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <Image size={20} color="#a855f7" />
+                  <Video size={20} color="#3b82f6" />
+                </div>
+                <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#e2e8f0" }}>
+                  Click to attach Photo or Video
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                  Supports PNG, JPG, WEBP formation diagrams or MP4, WEBM match video clips
+                </div>
+                <input
+                  id="tactic-media-input"
+                  type="file"
+                  accept="image/*,video/*"
+                  style={{ display: "none" }}
+                  onChange={handleMediaSelect}
+                />
+              </div>
+            ) : (
+              <div
+                style={{
+                  position: "relative",
+                  background: "rgba(0,0,0,0.4)",
+                  borderRadius: "12px",
+                  padding: "12px",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "#34d399", display: "flex", alignItems: "center", gap: "6px" }}>
+                    {mediaType === "VIDEO" ? <Video size={16} /> : <Image size={16} />}
+                    Attached {mediaType}: {mediaFile.name} ({(mediaFile.size / (1024 * 1024)).toFixed(2)} MB)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleClearMedia}
+                    style={{ background: "transparent", border: "none", color: "#f87171", cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.78rem" }}
+                  >
+                    <Trash2 size={14} /> Remove
+                  </button>
+                </div>
+
+                {mediaPreview && (
+                  <div style={{ maxHeight: "200px", overflow: "hidden", borderRadius: "8px" }}>
+                    {mediaType === "IMAGE" ? (
+                      <img
+                        src={mediaPreview}
+                        alt="Tactic Preview"
+                        style={{ width: "100%", maxHeight: "200px", objectFit: "contain", borderRadius: "8px" }}
+                      />
+                    ) : (
+                      <video
+                        src={mediaPreview}
+                        controls
+                        style={{ width: "100%", maxHeight: "200px", borderRadius: "8px" }}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Quick AI Translate Bar */}

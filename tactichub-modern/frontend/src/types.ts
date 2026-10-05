@@ -28,9 +28,15 @@ export interface Tactic {
   game: string;
   title: string;
   description: string;
-  coach_name: string;
+  author_name: string;
+  author_role: UserRole;
+  author_organization?: string;
+  is_author_verified: boolean;
+  media_url?: string;
+  media_type?: "IMAGE" | "VIDEO";
+  coach_name?: string;
   coach_organization?: string;
-  is_coach_verified: boolean;
+  is_coach_verified?: boolean;
   created_at: string;
 }
 

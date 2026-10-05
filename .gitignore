@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.sqlite3
+tactichub-modern/backend/uploads/*
+!tactichub-modern/backend/uploads/.gitkeep
+tactichub-modern/frontend/node_modules/
+tactichub-modern/frontend/dist/
+.env

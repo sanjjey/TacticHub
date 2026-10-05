@@ -77,11 +77,11 @@ export const api = {
     return res.json();
   },
 
-  async createTactic(data: { game: string; title: string; description: string }): Promise<Tactic> {
+  async createTactic(formData: FormData): Promise<Tactic> {
     const res = await fetch(`${API_BASE}/tactics/`, {
       method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(data),
+      headers: getHeaders(true),
+      body: formData,
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: "Failed to create tactic" }));

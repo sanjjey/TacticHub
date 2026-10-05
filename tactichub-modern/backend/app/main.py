@@ -39,6 +39,8 @@ app.include_router(ai_text.router)
 
 # Ensure tables exist immediately
 Base.metadata.create_all(bind=engine)
+from .database import migrate_sqlite_schema
+migrate_sqlite_schema()
 
 def seed_demo_data():
     db = SessionLocal()
@@ -109,20 +111,26 @@ def seed_demo_data():
             db.add(player_prof2)
             db.flush()
 
-            # Demo Tactics
+            # Demo Tactics (Posted by Coach and Player)
             tactic1 = Tactic(
-                coach_id=coach_prof.id,
+                user_id=coach_user.id,
                 game="Football",
                 title="Gegenpressing & Counter-Attack Transition",
                 description="Immediately upon ball turnover, the nearest 3 players collapse inward within 4 seconds. The wide wingers flare out to exploit inverted fullbacks."
             )
             tactic2 = Tactic(
-                coach_id=coach_prof.id,
+                user_id=coach_user.id,
                 game="Basketball",
                 title="Pick & Roll with Spain Action Screen",
                 description="Ball-handler uses high center screen while weak-side shooter sets back-screen on roll-man defender. Creates open corner 3 or direct lob."
             )
-            db.add_all([tactic1, tactic2])
+            tactic3 = Tactic(
+                user_id=player_user1.id,
+                game="Football",
+                title="Near-Post Corner Kick Run & Header Flick",
+                description="Striker sprints across the 6-yard box from the penalty spot to meet the low in-swinging corner. Quick flick toward the back post for incoming runners."
+            )
+            db.add_all([tactic1, tactic2, tactic3])
 
             # Demo Match Request
             match1 = MatchRequest(

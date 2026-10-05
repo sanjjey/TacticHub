@@ -69,9 +69,16 @@ class TacticResponse(BaseModel):
     game: str
     title: str
     description: str
-    coach_name: str
-    coach_organization: Optional[str]
-    is_coach_verified: bool
+    author_name: str
+    author_role: str
+    author_organization: Optional[str] = None
+    is_author_verified: bool = False
+    media_url: Optional[str] = None
+    media_type: Optional[str] = None
+    # Backwards compatibility fields
+    coach_name: Optional[str] = None
+    coach_organization: Optional[str] = None
+    is_coach_verified: bool = False
     created_at: datetime
 
     class Config:
